@@ -475,7 +475,8 @@ def api_search():
 
     try:
         plates = fetch_plates()
-    except (requests.RequestException, ValueError):
+    except (requests.RequestException, ValueError) as e:
+        print(f"[fetch_plates error - /api/search] {type(e).__name__}: {e}")
         return jsonify({"error": "تعذر جلب البيانات من مزاد أبشر، حاول مرة ثانية"}), 502
 
     results = []
@@ -502,7 +503,8 @@ def api_search():
 def api_stats():
     try:
         plates = fetch_plates()
-    except (requests.RequestException, ValueError):
+    except (requests.RequestException, ValueError) as e:
+        print(f"[fetch_plates error - /api/stats] {type(e).__name__}: {e}")
         return jsonify({"error": "تعذر جلب البيانات من مزاد أبشر"}), 502
     count = len(plates)
     top_amount = max((p["topBiddingAmount"] for p in plates), default=0)
