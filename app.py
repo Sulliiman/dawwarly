@@ -468,6 +468,16 @@ def index():
     return render_template_string(PAGE, auction_url=AUCTION_URL)
 
 
+@app.route("/my-ip")
+def my_ip():
+    # مسار مؤقت بس عشان نعرف الـ IP العام اللي يطلع منه السيرفر (نحذفه بعدين)
+    try:
+        r = requests.get("https://api.ipify.org?format=json", timeout=10)
+        return r.text
+    except requests.RequestException as e:
+        return f"error: {e}", 500
+
+
 @app.route("/api/search")
 def api_search():
     letters = add_spaces_between_letters(request.args.get("letters", "").strip())
