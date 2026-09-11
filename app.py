@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 DATA_URL = "https://mazad.absher.sa/portal/auction-dashboard/data/MVPData.json"
 AUCTION_URL = "https://mazad.absher.sa/portal/auction-dashboard/"
+GIST_ID = "dc25303cebe9a0ca1b286a4db79de8c6"
 
 PAGE = """
 <!DOCTYPE html>
@@ -454,13 +455,13 @@ def normalize_number(number):
 
 
 def fetch_plates():
-    resp = requests.get(DATA_URL, timeout=15)
+    # نقرأ من الـ Gist بدل ما نطلب أبشر مباشرة (جهاز المستخدم هو اللي يحدّث
+    # الـ Gist كل فترة من بيته، ويتجنب حجب أبشر لسيرفرات الاستضافة السحابية)
+    resp = requests.get(f"https://api.github.com/gists/{GIST_ID}", timeout=15)
     resp.raise_for_status()
-    # سيرفر أبشر أحيانًا يرجّع بيانات JSON زايدة بعد نهاية الرد الصحيح.
-    # ناخذ بس أول JSON صحيح ونتجاهل أي شي زايد بعده بدل ما نفشل كامل.
-    decoder = json.JSONDecoder()
-    data, _ = decoder.raw_decode(resp.text)
-    return data
+    gist_data = resp.json()
+    content = gist_data["files"]["plates.json"]["content"]
+    return json.loads(content)
 
 
 @app.route("/")
@@ -487,7 +488,7 @@ def api_search():
         plates = fetch_plates()
     except (requests.RequestException, ValueError) as e:
         print(f"[fetch_plates error - /api/search] {type(e).__name__}: {e}")
-        return jsonify({"error": "تعذر جلب البيانات من مزاد أبشر، حاول مرة ثانية"}), 502
+        return jsonify({"error": "تعذر جلب البيانات، حاول مرة ثانية"}), 502
 
     results = []
     for plate in plates:
@@ -515,7 +516,7 @@ def api_stats():
         plates = fetch_plates()
     except (requests.RequestException, ValueError) as e:
         print(f"[fetch_plates error - /api/stats] {type(e).__name__}: {e}")
-        return jsonify({"error": "تعذر جلب البيانات من مزاد أبشر"}), 502
+        return jsonify({"error": "تعذر جلب البيانات"}), 502
     count = len(plates)
     top_amount = max((p["topBiddingAmount"] for p in plates), default=0)
     return jsonify({"count": count, "topAmount": top_amount})
