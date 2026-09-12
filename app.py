@@ -146,6 +146,8 @@ PAGE = """
     .field label{ font-size: 12px; margin-bottom: 6px; }
     .input-wrap input{ padding: 10px 30px 10px 12px; font-size: 14px; }
     .search-rig button[type="submit"]{ padding: 11px; font-size: 14px; }
+    footer .wrap{ justify-content: center; text-align: center; }
+    footer .made-by{ width: 100%; justify-content: center; }
   }
 
   /* ---------- Stats ---------- */
@@ -227,6 +229,12 @@ PAGE = """
   footer .wrap{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
   footer p{ margin:0; font-size: 13px; color: rgba(243,240,232,0.45); }
   footer .disclaimer{ font-size: 12px; color: rgba(243,240,232,0.35); }
+  footer .made-by{
+    display:flex; align-items:center; gap:6px;
+    font-size: 13px; color: rgba(243,240,232,0.55);
+    text-decoration:none; transition: color .15s ease;
+  }
+  footer .made-by:hover{ color: var(--amber); }
 </style>
 </head>
 <body>
@@ -287,7 +295,7 @@ PAGE = """
       <div class="step">
         <div class="n">02</div>
         <h3>ابحث</h3>
-        <p>نجيب لك النتائج مباشرة من بيانات مزاد أبشر لحظة الطلب.</p>
+        <p>نجيب لك النتائج من بيانات مزاد أبشر، تتحدث كل ساعة.</p>
       </div>
       <div class="step">
         <div class="n">03</div>
@@ -302,6 +310,10 @@ PAGE = """
   <div class="wrap">
     <p>© 2026 دور لي</p>
     <p class="disclaimer">أداة بحث مستقلة، غير تابعة لأي جهة حكومية.</p>
+    <a href="https://linkedin.com/in/sulimanalhasan" target="_blank" rel="noopener" class="made-by">
+      <svg width="16" height="16" viewBox="0 0 24 24" style="position:relative; top:-2px;"><rect width="24" height="24" rx="4" fill="#0A66C2"/><path fill="#fff" d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+      Made by Suliman
+    </a>
   </div>
 </footer>
 
