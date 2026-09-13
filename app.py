@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template_string
 import requests
 import json
+import time
 
 app = Flask(__name__)
 
@@ -466,14 +467,26 @@ def normalize_number(number):
     return converted[:4]
 
 
+_cache = {"data": None, "fetched_at": 0}
+CACHE_SECONDS = 300  # 5 minutes - avoids hitting GitHub's 60 req/hour limit
+
+
 def fetch_plates():
     # نقرأ من الـ Gist بدل ما نطلب أبشر مباشرة (جهاز المستخدم هو اللي يحدّث
     # الـ Gist كل فترة من بيته، ويتجنب حجب أبشر لسيرفرات الاستضافة السحابية)
+    now = time.time()
+    if _cache["data"] is not None and (now - _cache["fetched_at"]) < CACHE_SECONDS:
+        return _cache["data"]
+
     resp = requests.get(f"https://api.github.com/gists/{GIST_ID}", timeout=15)
     resp.raise_for_status()
     gist_data = resp.json()
     content = gist_data["files"]["plates.json"]["content"]
-    return json.loads(content)
+    data = json.loads(content)
+
+    _cache["data"] = data
+    _cache["fetched_at"] = now
+    return data
 
 
 @app.route("/")
