@@ -471,18 +471,20 @@ _cache = {"data": None, "fetched_at": 0}
 CACHE_SECONDS = 300  # 5 minutes - avoids hitting GitHub's 60 req/hour limit
 
 
+GIST_RAW_URL = "https://gist.githubusercontent.com/Sulliiman/dc25303cebe9a0ca1b286a4db79de8c6/raw/plates.json"
+
+
 def fetch_plates():
     # نقرأ من الـ Gist بدل ما نطلب أبشر مباشرة (جهاز المستخدم هو اللي يحدّث
     # الـ Gist كل فترة من بيته، ويتجنب حجب أبشر لسيرفرات الاستضافة السحابية)
+    # نستخدم رابط raw (مو api.github.com) لأنه ما له حد ٦٠ طلب/ساعة الصارم
     now = time.time()
     if _cache["data"] is not None and (now - _cache["fetched_at"]) < CACHE_SECONDS:
         return _cache["data"]
 
-    resp = requests.get(f"https://api.github.com/gists/{GIST_ID}", timeout=15)
+    resp = requests.get(GIST_RAW_URL, timeout=15, headers={"Cache-Control": "no-cache"})
     resp.raise_for_status()
-    gist_data = resp.json()
-    content = gist_data["files"]["plates.json"]["content"]
-    data = json.loads(content)
+    data = json.loads(resp.text)
 
     _cache["data"] = data
     _cache["fetched_at"] = now
