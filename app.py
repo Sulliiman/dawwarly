@@ -16,9 +16,10 @@ PAGE = """
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 <title>دور لي — بحث لوحات مزاد أبشر</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAFOUlEQVR4nO2bW2xURRjHfzN7lmLb7SVyawttQQRKLbQsKBGitnIJJKQVCQGNqKghUTFRXmxMiA9CIhJCQqJRTIh4CfqAtg8E00h8E6TbLUSoGKDtSrtAqdsbBGT3jA+lWG49C8yecxb4vZ0533zff/85l5kzO4I4CLc2TBWISlDlQB6QC2TF09dGuoB2oA3YZypVk1vob7LqJIY6GW5pWCQEG4FSPRrtRaGCUlA9Ot//861ibmpAR6ghN6bYCTybMHX2UudR5ssjC2eGrz9xgwFnm4OlpkfVoMi3R5tttCshqnLyyw4ObrzGgHAoOEso9SuQaqcyG7lgop7KLfAHBhquGtDRUp9jCvm7grHOaLONsCHlrBHjStsA5EBrTMhv7oMfD5ATNc0dAwcSINwSXAxUOCbJfuafCQUWwhUDhFAbnNXjAEpsBBDh1sZigfmH03qcwDTNIimEqnRaiFMIKSslSj3jtBAHKTeAcToybdq6nYbGo7fVR0hBRno6Pl8avvQ0CgvyKCmeTPGUiaSkDNMha+j6MNYAcnQkC50Kc/TP4zpS4TU8+MtKqFoyjwUVczEMj5a8NyFPApmJyn6nXI7G2H+wkffXb2bpC2+x/2BjokplSesYZ2kJtbHmnfVs+/xrlFLa87veAAClFNt3/MCmrV9qz50UBgzw7fe11O7ZpzVnUhkAsGnLF3R392rLZ2jLFAfpaam8t3b11WOlFOc6IzQebuJA/SFM07TM0dN3np27fmLtmpe0aLLVgJSUFJZVLbzpuRMnQ6z74GNONocs8+yuqePN11/E47n7C9g1t8AjE/LZvu0jsrOt38qd/0T463izlrquMQBg5IhsVq2siis2EDyipaarDACYV/5kXHHBQ/eoAfljcxg+PMUy7kxHp5Z6rjNACEFmhs8yrqfnvJZ6rjMAwOu1nvx09+oZC7jSgHiIXY5qyeNKA2Ix60mPL47bJB5caUBfX59lTFZmupZarjMgEummt++CZVxW5j16BRyoPxRXXHHRJC31XGVANBrjq+9+jCt2RulULTVdY0A0GmPDJ59xpMn6u6JhGJSWFGmpa+ts0FQmPb3/P+Ci0SjnOrsINh5h1+49nDhpPRMEWFAxh9TUh7RostWASKSbufNX3lUOKSWrVy3TpMhFt0C8LF+6iEkTC7XlSyoDiosmsm7QFyUdJI0BxVMf5dMtH2pfMbL1GXAnSClZ8fxi3n371YQsl7nWAK/XS8XTs3njleVa7/nrcYUBhuHB50uncFwe0x6bzLSSKTzhLyFD04RnKMTp1gYt603nOru4ePHSbfXxej340tO0vdPvBG1XwIiH3fbP2fhImrdAonhggNMCnOaBAU4LcJr73gCD/p0Wlu+w2MUIKvZv4hVpQHiG4RmebR0HEYP+bSaWBnT8toFLZw9rkJd4UkZNY0z5Zss4hWqT9O+xuS9RiDYJ6P3TTTKhxC/SVKrGaR1OYZqy1sgt9DeFWwNBgSgbKjh1zEyMtDF2absrhvms930ICORNmH7MAJCCaqXYO1SHjKIVmuS5BVENV8YBV/bV1Tmqx0aUYu/ogrI6GDQQkmZ0FfC3Y6rso92QvDZwcNWAUeMfP22ingOsVyaTl/OmMpeMzJ/RPtBwzVA4t8AfkKaYgyC+JZrkok0JUZ5bOLNhcOMNc4FR48saPaY5m3vomaAUe0XM679+1yhYbJ4+EwosRImNCmYkTl7iEBAAUT3wwLtFjDXtzfVThJSVAlUBIo/+LfRu+wjYBbQpOAVqnxkzavImTD9m1ek/RhFwX3qBWOMAAAAASUVORK5CYII=">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Archivo+Black&family=Oswald:wght@500&display=swap" rel="stylesheet">
 <style>
   :root{
     --asphalt: #23211E;
@@ -58,11 +59,11 @@ PAGE = """
   header{ padding: 26px 0 20px; border-bottom: 1px solid var(--line); }
   header .wrap{ display:flex; align-items:center; justify-content:space-between; gap: 24px; }
   .logo{
-    font-family: var(--font-ar); font-weight: 700; font-size: 21px;
-    letter-spacing: 0.3px; display:flex; align-items:center; gap:9px;
+    display:flex; align-items:center; gap: 10px;
     text-decoration: none;
   }
-  .logo .dot{ width:8px; height:8px; border-radius:50%; background: var(--amber); display:inline-block; }
+  .logo svg{ width: 34px; height: 34px; display:block; }
+  .logo-text{ font-family: var(--font-ar); font-weight: 700; font-size: 20px; color: var(--paper); }
   nav a{
     font-size: 15px; color: rgba(243,240,232,0.72); text-decoration:none;
     transition: color .15s ease;
@@ -242,7 +243,14 @@ PAGE = """
 
 <header>
   <div class="wrap">
-    <a href="/" class="logo"><span class="dot"></span>دور لي</a>
+    <a href="/" class="logo" aria-label="دور لي">
+      <svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="160" height="160" rx="35" fill="#E8E1CE"/>
+        <rect x="26" y="127" width="109" height="12" fill="#C98A14"/>
+        <text x="80" y="105" text-anchor="middle" style="font-family:'Archivo Black',sans-serif" font-size="109" fill="#16191B">D</text>
+      </svg>
+      <span class="logo-text">دور لي</span>
+    </a>
     <nav><a href="#how">كيف يعمل</a></nav>
   </div>
 </header>
