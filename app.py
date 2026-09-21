@@ -53,7 +53,7 @@ PAGE = """
   button{ font-family: inherit; cursor: pointer; }
   :focus-visible{ outline: 2px solid var(--amber); outline-offset: 3px; }
 
-  .wrap{ max-width: 900px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
+  .wrap{ max-width: 1080px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
 
   /* ---------- Header ---------- */
   header{ padding: 26px 0 20px; border-bottom: 1px solid var(--line); }
@@ -124,8 +124,9 @@ PAGE = """
   .clear-btn:hover{ color: var(--paper); background: rgba(255,255,255,0.16); }
   .input-wrap.has-value .clear-btn{ display:flex; }
 
+  .search-actions{ display:flex; gap: 10px; }
   .search-rig button[type="submit"]{
-    width:100%;
+    flex: 1 1 0;
     background: var(--amber);
     color: var(--ink);
     border: none;
@@ -136,6 +137,22 @@ PAGE = """
     transition: filter .15s ease;
   }
   .search-rig button[type="submit"]:hover{ filter: brightness(1.08); }
+  #showAllBtn{
+    display: none;
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: rgba(243,240,232,0.75);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 13px;
+    font-weight: 500;
+    font-size: 15px;
+    font-family: var(--font-ar);
+    transition: border-color .15s ease, color .15s ease;
+  }
+  #showAllBtn:hover{ border-color: rgba(232,163,61,0.4); color: var(--paper); }
   .search-rig button[disabled]{ opacity:.6; cursor:default; }
 
   @media (max-width: 520px){ .search-fields{ flex-direction: column; } }
@@ -147,7 +164,8 @@ PAGE = """
     .search-fields{ gap: 14px; margin-bottom: 14px; }
     .field label{ font-size: 12px; margin-bottom: 6px; }
     .input-wrap input{ padding: 10px 30px 10px 12px; font-size: 14px; }
-    .search-rig button[type="submit"]{ padding: 11px; font-size: 14px; }
+    .search-actions{ flex-direction: column; }
+    .search-rig button[type="submit"], #showAllBtn{ padding: 11px; font-size: 14px; }
     footer .wrap{ justify-content: center; text-align: center; }
     footer .made-by{ width: 100%; justify-content: center; }
   }
@@ -155,7 +173,7 @@ PAGE = """
   /* ---------- Stats ---------- */
   .stat-row{
     display:flex; justify-content:center; gap: 48px;
-    margin: 34px 0 60px;
+    margin: 34px 0 6px;
   }
   .stat-row .stat b{
     display:block; font-family: var(--font-num); font-size: 28px;
@@ -163,8 +181,141 @@ PAGE = """
   }
   .stat-row .stat span{ font-size: 13px; color: rgba(243,240,232,0.6); }
 
+  .last-updated{
+    text-align:center; font-size: 12.5px; color: rgba(243,240,232,0.4);
+    margin-bottom: 44px;
+  }
+
+  /* ---------- Filter bar ---------- */
+  .filter-bar{
+    display:flex; flex-direction:column; gap: 18px;
+    background: var(--steel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+  }
+  .filter-row{
+    display:flex; flex-wrap:wrap; align-items:flex-end; gap: 20px;
+  }
+  .filter-group{ display:flex; flex-direction:column; gap: 8px; }
+  .filter-group label{
+    font-size: 12.5px; color: rgba(243,240,232,0.5); font-weight: 500;
+  }
+  .sort-group{ flex: 0 0 170px; }
+  .digits-group{ flex: 0 0 auto; }
+  .pattern-group{ flex: 0 0 auto; }
+  .letter-pattern-group{ flex: 0 0 auto; }
+  .clear-group{ flex: 0 0 auto; }
+  .filter-bar select{
+    background: var(--asphalt);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--paper);
+    font-family: var(--font-ar);
+    font-size: 15px;
+    padding: 12px;
+    min-height: 46px;
+  }
+  .filter-bar select:focus{ outline:none; border-color: rgba(232,163,61,0.5); }
+  .price-group{ flex: 1 1 300px; }
+  .price-inputs{ display:flex; flex-wrap:wrap; align-items:center; gap: 10px; }
+  .price-inputs input{
+    flex: 1 1 90px;
+    min-width: 80px;
+    width: auto;
+    background: var(--asphalt);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--paper);
+    font-family: var(--font-num);
+    font-size: 16px;
+    padding: 13px 12px;
+    min-height: 46px;
+  }
+  .price-inputs input:focus{ outline:none; border-color: rgba(232,163,61,0.5); }
+  .price-inputs span{ color: rgba(243,240,232,0.35); flex: 0 0 auto; }
+  /* إخفاء أزرار الزيادة/النقصان على حقول الأرقام */
+  .price-inputs input[type="number"]::-webkit-outer-spin-button,
+  .price-inputs input[type="number"]::-webkit-inner-spin-button{
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .price-inputs input[type="number"]{ -moz-appearance: textfield; appearance: textfield; }
+  .apply-price-btn{
+    flex: 0 0 auto;
+    background: var(--amber);
+    color: var(--ink);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 20px;
+    min-height: 46px;
+    white-space: nowrap;
+    transition: filter .15s ease;
+  }
+  .apply-price-btn:hover{ filter: brightness(1.08); }
+  .clear-filters-btn{
+    width: auto;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: rgba(243,240,232,0.6);
+    font-family: var(--font-ar);
+    font-size: 14px;
+    padding: 12px 20px;
+    min-height: 46px;
+    white-space: nowrap;
+    transition: border-color .15s ease, color .15s ease;
+  }
+  .clear-filters-btn:hover{ border-color: rgba(232,163,61,0.4); color: var(--paper); }
+  .digit-chips{ display:flex; flex-wrap:nowrap; gap: 8px; }
+  .chip{
+    flex: 0 0 auto;
+    text-align:center;
+    white-space: nowrap;
+    background: var(--asphalt);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    color: rgba(243,240,232,0.7);
+    font-family: var(--font-ar);
+    font-size: 13.5px;
+    padding: 10px 16px;
+    min-height: 46px;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .chip:hover{ color: var(--paper); }
+  .chip.active{
+    background: var(--amber);
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  @media (max-width: 560px){
+    .filter-row{ flex-direction: column; align-items: stretch; }
+    .sort-group, .price-group, .digits-group, .pattern-group, .letter-pattern-group, .clear-group{ flex-basis: auto; }
+    .apply-price-btn{ flex: 1 1 100%; }
+    .clear-filters-btn{ width: 100%; }
+    .digit-chips{ flex-wrap: wrap; }
+    .chip{ flex: 1 1 calc(33.333% - 6px); min-width: 72px; white-space: normal; }
+  }
+
   /* ---------- Results ---------- */
   #status{ text-align:center; color: rgba(243,240,232,0.55); min-height: 24px; margin-bottom: 10px; }
+
+  .load-more-wrap{ display:none; justify-content:center; padding-bottom: 50px; }
+  .load-more-btn{
+    background: var(--steel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--paper);
+    font-family: var(--font-ar);
+    font-size: 14px;
+    padding: 12px 28px;
+    transition: border-color .15s ease;
+  }
+  .load-more-btn:hover{ border-color: rgba(232,163,61,0.4); }
 
   .grid{
     display:grid;
@@ -277,7 +428,10 @@ PAGE = """
           </div>
         </div>
       </div>
-      <button type="submit" id="submitBtn">بحث</button>
+      <div class="search-actions">
+        <button type="submit" id="submitBtn">بحث</button>
+        <button type="button" id="showAllBtn">عرض كل اللوحات</button>
+      </div>
     </div>
   </form>
 
@@ -285,11 +439,68 @@ PAGE = """
     <div class="stat"><b id="statCount">—</b><span>لوحة في المزاد الآن</span></div>
     <div class="stat"><b id="statTop">—</b><span>أعلى صفقة (ريال)</span></div>
   </div>
+  <div class="last-updated">آخر تحديث: <span id="lastUpdated">—</span></div>
 </section>
 
 <div class="wrap">
+  <div class="filter-bar">
+    <div class="filter-row">
+      <div class="filter-group sort-group">
+        <label for="sortSelect">الترتيب</label>
+        <select id="sortSelect">
+          <option value="desc">الأعلى للأقل</option>
+          <option value="asc">الأقل للأعلى</option>
+        </select>
+      </div>
+      <div class="filter-group price-group">
+        <label>السعر (ريال)</label>
+        <div class="price-inputs">
+          <input id="minPrice" type="number" min="0" placeholder="من">
+          <span>—</span>
+          <input id="maxPrice" type="number" min="0" placeholder="إلى">
+          <button type="button" class="apply-price-btn" id="applyPriceBtn">تطبيق</button>
+        </div>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-group digits-group">
+        <label>عدد خانات الرقم</label>
+        <div class="digit-chips" id="digitChips">
+          <button type="button" class="chip active" data-digits="">الكل</button>
+          <button type="button" class="chip" data-digits="1">فردي</button>
+          <button type="button" class="chip" data-digits="2">ثنائي</button>
+          <button type="button" class="chip" data-digits="3">ثلاثي</button>
+          <button type="button" class="chip" data-digits="4">رباعي</button>
+        </div>
+      </div>
+      <div class="filter-group pattern-group">
+        <label>تصنيف الأرقام</label>
+        <div class="digit-chips" id="patternChips">
+          <button type="button" class="chip active" data-pattern="">الكل</button>
+          <button type="button" class="chip" data-pattern="repeated">مكرر</button>
+          <button type="button" class="chip" data-pattern="lock">قفل</button>
+        </div>
+      </div>
+      <div class="filter-group letter-pattern-group">
+        <label>تصنيف الحروف</label>
+        <div class="digit-chips" id="letterPatternChips">
+          <button type="button" class="chip active" data-letter-pattern="">الكل</button>
+          <button type="button" class="chip" data-letter-pattern="repeated">مكرر</button>
+          <button type="button" class="chip" data-letter-pattern="lock">قفل</button>
+        </div>
+      </div>
+      <div class="filter-group clear-group">
+        <label>&nbsp;</label>
+        <button type="button" class="clear-filters-btn" id="clearFiltersBtn">مسح الفلاتر</button>
+      </div>
+    </div>
+  </div>
+
   <div id="status"></div>
   <div class="grid" id="results"></div>
+  <div class="load-more-wrap" id="loadMoreWrap">
+    <button type="button" class="load-more-btn" id="loadMoreBtn">عرض المزيد</button>
+  </div>
 </div>
 
 <section class="section" id="how">
@@ -341,6 +552,14 @@ PAGE = """
     clearBtn.addEventListener('click', () => { input.value = ''; toggle(); input.focus(); });
   });
 
+  // زر "عرض كل اللوحات" يظهر بس بعد ما المستخدم يضغط "بحث" فعلياً
+  const showAllBtn = document.getElementById('showAllBtn');
+  function updateShowAllVisibility() {
+    const hasSearch = document.getElementById('letters').value.trim()
+      || document.getElementById('number').value.trim();
+    showAllBtn.style.display = hasSearch ? 'flex' : 'none';
+  }
+
   function formatLetters(letters) {
     return (letters || '')
       .split(' ')
@@ -359,52 +578,155 @@ PAGE = """
     return `${datePart} - ${h}:${mm} ${ampm}`;
   }
 
+  function formatLastUpdated(ts) {
+    if (!ts) return '—';
+    const diffSec = Math.floor(Date.now() / 1000 - ts);
+    if (diffSec < 60) return 'قبل لحظات';
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `قبل ${diffMin.toLocaleString('ar')} دقيقة`;
+    const diffHr = Math.floor(diffMin / 60);
+    return `قبل ${diffHr.toLocaleString('ar')} ساعة`;
+  }
+
   async function loadStats() {
     try {
       const res = await fetch('/api/stats');
       const data = await res.json();
       document.getElementById('statCount').textContent = data.count.toLocaleString('ar');
       document.getElementById('statTop').textContent = data.topAmount.toLocaleString('ar');
+      document.getElementById('lastUpdated').textContent = formatLastUpdated(data.lastUpdated);
     } catch (err) {
       document.getElementById('statCount').textContent = '—';
       document.getElementById('statTop').textContent = '—';
+      document.getElementById('lastUpdated').textContent = '—';
     }
   }
   loadStats();
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  // ---------- Filter bar state ----------
+  const sortSelect = document.getElementById('sortSelect');
+  const minPriceInput = document.getElementById('minPrice');
+  const maxPriceInput = document.getElementById('maxPrice');
+  const applyPriceBtn = document.getElementById('applyPriceBtn');
+  const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+  const digitChips = document.querySelectorAll('#digitChips .chip');
+  const patternChips = document.querySelectorAll('#patternChips .chip');
+  const letterPatternChips = document.querySelectorAll('#letterPatternChips .chip');
+  const loadMoreWrap = document.getElementById('loadMoreWrap');
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+  let currentDigits = '';
+  let currentPattern = '';
+  let currentLetterPattern = '';
+  let allResults = [];
+  let shownCount = 0;
+  const PAGE_SIZE = 30;
+
+  digitChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      digitChips.forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentDigits = chip.dataset.digits;
+      runSearch();
+    });
+  });
+  patternChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      patternChips.forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentPattern = chip.dataset.pattern;
+      runSearch();
+    });
+  });
+  letterPatternChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      letterPatternChips.forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentLetterPattern = chip.dataset.letterPattern;
+      runSearch();
+    });
+  });
+  sortSelect.addEventListener('change', runSearch);
+  applyPriceBtn.addEventListener('click', runSearch);
+  [minPriceInput, maxPriceInput].forEach((input) => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); runSearch(); }
+    });
+  });
+  clearFiltersBtn.addEventListener('click', () => {
+    minPriceInput.value = '';
+    maxPriceInput.value = '';
+    sortSelect.value = 'desc';
+    digitChips.forEach((c) => c.classList.remove('active'));
+    document.querySelector('#digitChips .chip[data-digits=""]').classList.add('active');
+    currentDigits = '';
+    patternChips.forEach((c) => c.classList.remove('active'));
+    document.querySelector('#patternChips .chip[data-pattern=""]').classList.add('active');
+    currentPattern = '';
+    letterPatternChips.forEach((c) => c.classList.remove('active'));
+    document.querySelector('#letterPatternChips .chip[data-letter-pattern=""]').classList.add('active');
+    currentLetterPattern = '';
+    runSearch();
+  });
+  loadMoreBtn.addEventListener('click', renderMore);
+
+  function buildCard(p, i) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.setProperty('--i', i % PAGE_SIZE);
+    card.style.setProperty('--tilt', ((Math.random() * 6) - 3).toFixed(1) + 'deg');
+    card.innerHTML = `
+      <div class="plate-mini" style="--tilt: ${((Math.random()*4)-2).toFixed(1)}deg">
+        <span class="bolt tl"></span><span class="bolt tr"></span><span class="bolt bl"></span><span class="bolt br"></span>
+        <span class="let">${formatLetters(p.letters)}</span><span class="num">${p.plateNumber}</span>
+      </div>
+      <div class="price">${p.topBiddingAmount.toLocaleString('ar')} ريال</div>
+      <div class="ends">ينتهي: ${formatEndDate(p.auctionEndDate)}</div>
+    `;
+    card.addEventListener('click', () => window.open('{{ auction_url }}#' + p.anchor, '_blank'));
+    return card;
+  }
+
+  function renderMore() {
+    const next = allResults.slice(shownCount, shownCount + PAGE_SIZE);
+    next.forEach((p, idx) => results.appendChild(buildCard(p, shownCount + idx)));
+    shownCount += next.length;
+
+    loadMoreWrap.style.display = shownCount < allResults.length ? 'flex' : 'none';
+    status.textContent = `${shownCount.toLocaleString('ar')} من ${allResults.length.toLocaleString('ar')} لوحة`;
+  }
+
+  async function runSearch() {
     const letters = document.getElementById('letters').value.trim();
     const number = document.getElementById('number').value.trim();
+    const params = new URLSearchParams();
+    if (letters) params.set('letters', letters);
+    if (number) params.set('number', number);
+    if (minPriceInput.value) params.set('minPrice', minPriceInput.value);
+    if (maxPriceInput.value) params.set('maxPrice', maxPriceInput.value);
+    if (currentDigits) params.set('digits', currentDigits);
+    if (currentPattern) params.set('pattern', currentPattern);
+    if (currentLetterPattern) params.set('letterPattern', currentLetterPattern);
+    params.set('sort', sortSelect.value);
 
     btn.disabled = true;
-    btn.textContent = 'يبحث...';
+    btn.textContent = 'بحث...';
     status.textContent = '';
     results.innerHTML = '';
+    loadMoreWrap.style.display = 'none';
+    shownCount = 0;
+    allResults = [];
 
     try {
-      const res = await fetch(`/api/search?letters=${encodeURIComponent(letters)}&number=${encodeURIComponent(number)}`);
+      const res = await fetch(`/api/search?${params.toString()}`);
       const data = await res.json();
+      if (!Array.isArray(data)) throw new Error('bad response');
+      allResults = data;
 
-      if (!data.length) {
+      if (!allResults.length) {
         status.textContent = 'ما فيه لوحة مطابقة حالياً';
       } else {
-        data.forEach((p, i) => {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.style.setProperty('--i', i);
-          card.style.setProperty('--tilt', ((Math.random() * 6) - 3).toFixed(1) + 'deg');
-          card.innerHTML = `
-            <div class="plate-mini" style="--tilt: ${((Math.random()*4)-2).toFixed(1)}deg">
-              <span class="bolt tl"></span><span class="bolt tr"></span><span class="bolt bl"></span><span class="bolt br"></span>
-              <span class="let">${formatLetters(p.letters)}</span><span class="num">${p.plateNumber}</span>
-            </div>
-            <div class="price">${p.topBiddingAmount.toLocaleString('ar')} ريال</div>
-            <div class="ends">ينتهي: ${formatEndDate(p.auctionEndDate)}</div>
-          `;
-          card.addEventListener('click', () => window.open('{{ auction_url }}#' + p.anchor, '_blank'));
-          results.appendChild(card);
-        });
+        renderMore();
       }
     } catch (err) {
       status.textContent = 'تعذر جلب البيانات، حاول مرة ثانية';
@@ -412,7 +734,27 @@ PAGE = """
       btn.disabled = false;
       btn.textContent = 'بحث';
     }
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    runSearch();
+    updateShowAllVisibility();
   });
+
+  document.getElementById('showAllBtn').addEventListener('click', () => {
+    const lettersInput = document.getElementById('letters');
+    const numberInput = document.getElementById('number');
+    lettersInput.value = '';
+    numberInput.value = '';
+    lettersInput.dispatchEvent(new Event('input'));
+    numberInput.dispatchEvent(new Event('input'));
+    updateShowAllVisibility();
+    runSearch();
+  });
+
+  // تصفح كل اللوحات مباشرة عند فتح الصفحة
+  runSearch();
 </script>
 
 </body>
@@ -504,20 +846,64 @@ def index():
     return render_template_string(PAGE, auction_url=AUCTION_URL)
 
 
-@app.route("/my-ip")
-def my_ip():
-    # مسار مؤقت بس عشان نعرف الـ IP العام اللي يطلع منه السيرفر (نحذفه بعدين)
+def _parse_price(value):
     try:
-        r = requests.get("https://api.ipify.org?format=json", timeout=10)
-        return r.text
-    except requests.RequestException as e:
-        return f"error: {e}", 500
+        return float(value) if value else None
+    except ValueError:
+        return None
+
+
+def digit_str(plate_number):
+    # تمثيل الرقم كنص بدون أصفار بادئة (المرجع لعدّ الخانات وتصنيف الأنماط)
+    try:
+        return str(int(plate_number))
+    except (TypeError, ValueError):
+        return str(plate_number).lstrip("0") or "0"
+
+
+def matches_pattern(number_str, pattern):
+    # مكرر: كل الخانات نفس الرقم (ثنائي/ثلاثي/رباعي فقط)
+    if pattern == "repeated":
+        return len(number_str) >= 2 and len(set(number_str)) == 1
+    # قفل: أول رقم = آخر رقم، والوسط مب مهم — بس نستثني اللي كل خاناته متطابقة
+    # (لأن هذي أصلاً "مكرر"، مو "قفل" حقيقي)
+    if pattern == "lock":
+        return (
+            len(number_str) >= 3
+            and number_str[0] == number_str[-1]
+            and len(set(number_str)) > 1
+        )
+    return True
+
+
+def letter_list(letters_ar):
+    # الحروف الثلاثة بعد توحيد الألف (نفس منطق normalize())
+    return letters_ar.replace("ا", "أ").split()
+
+
+def matches_letter_pattern(letters, pattern):
+    # الحروف دايماً 3 خانات
+    if len(letters) != 3:
+        return False
+    # مكرر: الثلاث حروف نفس الحرف
+    if pattern == "repeated":
+        return len(set(letters)) == 1
+    # قفل: أول حرف = آخر حرف، بس نستثني اللي الثلاثة متطابقة (نفس منطق الأرقام)
+    if pattern == "lock":
+        return letters[0] == letters[-1] and len(set(letters)) > 1
+    return True
 
 
 @app.route("/api/search")
 def api_search():
     letters = add_spaces_between_letters(request.args.get("letters", "").strip())
     number = normalize_number(request.args.get("number", "").strip())
+    min_price = _parse_price(request.args.get("minPrice", "").strip())
+    max_price = _parse_price(request.args.get("maxPrice", "").strip())
+    digits = request.args.get("digits", "").strip()
+    pattern = request.args.get("pattern", "").strip()
+    letter_pattern = request.args.get("letterPattern", "").strip()
+    sort = request.args.get("sort", "").strip()
 
     try:
         plates = fetch_plates()
@@ -528,19 +914,38 @@ def api_search():
     results = []
     for plate in plates:
         letters_ar = fix_encoding(plate["plateLetterAr"])
+        price = plate["topBiddingAmount"]
+        num_str = digit_str(plate["plateNumber"])
 
         if letters and normalize(letters) != normalize(letters_ar):
             continue
         if number and number != plate["plateNumber"]:
             continue
+        if min_price is not None and price < min_price:
+            continue
+        if max_price is not None and price > max_price:
+            continue
+        if digits in ("1", "2", "3", "4") and len(num_str) != int(digits):
+            continue
+        if letter_pattern in ("repeated", "lock") and not matches_letter_pattern(
+            letter_list(letters_ar), letter_pattern
+        ):
+            continue
+        if pattern in ("repeated", "lock") and not matches_pattern(num_str, pattern):
+            continue
 
         results.append({
             "plateNumber": plate["plateNumber"],
             "letters": letters_ar,
-            "topBiddingAmount": plate["topBiddingAmount"],
+            "topBiddingAmount": price,
             "auctionEndDate": plate["auctionEndDate"],
             "anchor": build_plate_anchor(letters_ar, plate["plateNumber"]),
         })
+
+    if sort == "asc":
+        results.sort(key=lambda p: p["topBiddingAmount"])
+    elif sort == "desc":
+        results.sort(key=lambda p: p["topBiddingAmount"], reverse=True)
 
     return jsonify(results)
 
@@ -554,7 +959,11 @@ def api_stats():
         return jsonify({"error": "تعذر جلب البيانات"}), 502
     count = len(plates)
     top_amount = max((p["topBiddingAmount"] for p in plates), default=0)
-    return jsonify({"count": count, "topAmount": top_amount})
+    return jsonify({
+        "count": count,
+        "topAmount": top_amount,
+        "lastUpdated": _cache["fetched_at"] or None,
+    })
 
 
 if __name__ == "__main__":
