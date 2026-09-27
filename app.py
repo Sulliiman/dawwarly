@@ -2,11 +2,11 @@ from flask import Flask, request, jsonify, render_template_string
 import requests
 import json
 import time
+from urllib.parse import quote
 
 app = Flask(__name__)
 
 DATA_URL = "https://mazad.absher.sa/portal/auction-dashboard/data/MVPData.json"
-AUCTION_URL = "https://mazad.absher.sa/portal/auction-dashboard/"
 GIST_ID = "dc25303cebe9a0ca1b286a4db79de8c6"
 
 PAGE = """
@@ -683,7 +683,7 @@ PAGE = """
       <div class="price">${p.topBiddingAmount.toLocaleString('ar')} ريال</div>
       <div class="ends">ينتهي: ${formatEndDate(p.auctionEndDate)}</div>
     `;
-    card.addEventListener('click', () => window.open('{{ auction_url }}#' + p.anchor, '_blank'));
+    card.addEventListener('click', () => window.open(p.url, '_blank'));
     return card;
   }
 
@@ -786,6 +786,20 @@ def build_plate_anchor(letters_ar, plate_number):
     return f"{en_letters}{plate_number}"
 
 
+def build_plate_url(letters_ar, plate_number):
+    # رابط أبشر المباشر للوحة (يفتح ويسكرول تلقائي لنفسها)
+    # مثال حقيقي: .../index.html?tb=2&plateNumber=409&plateLetter=U%20S%20N#NSU409
+    # plateLetter بترتيب الحروف الأصلي (مب معكوس) ومفصول بمسافات، والـ anchor معكوس (نفس build_plate_anchor)
+    letters_list = letters_ar.split()
+    en_letters_ordered = " ".join(AR_TO_EN_LETTER.get(ch, "") for ch in letters_list)
+    plate_letter_param = quote(en_letters_ordered)
+    anchor = build_plate_anchor(letters_ar, plate_number)
+    return (
+        "https://mazad.absher.sa/portal/auction-dashboard/index.html"
+        f"?tb=2&plateNumber={plate_number}&plateLetter={plate_letter_param}#{anchor}"
+    )
+
+
 def normalize(letters):
     # يطابق نفس ترتيب الحروف بالضبط، بس يتجاهل المسافات الزايدة
     # ويعامل الألف بدون همزة "ا" كأنها "أ"
@@ -843,7 +857,7 @@ def fetch_plates():
 
 @app.route("/")
 def index():
-    return render_template_string(PAGE, auction_url=AUCTION_URL)
+    return render_template_string(PAGE)
 
 
 def _parse_price(value):
@@ -939,7 +953,7 @@ def api_search():
             "letters": letters_ar,
             "topBiddingAmount": price,
             "auctionEndDate": plate["auctionEndDate"],
-            "anchor": build_plate_anchor(letters_ar, plate["plateNumber"]),
+            "url": build_plate_url(letters_ar, plate["plateNumber"]),
         })
 
     if sort == "asc":
